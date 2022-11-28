@@ -6,6 +6,7 @@ A tool to quickly check if all the submissions assigned to oneself for the "Prog
 
 - Python
   - package *requests*
+
     Can be installed by `python -m pip install -r requirements.txt`
 
 - Github API Token with the following permissions
