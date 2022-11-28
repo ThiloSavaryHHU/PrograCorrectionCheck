@@ -37,7 +37,7 @@ The tool checks if the given points match the ones from the badge, if not, a war
 
 ![Example output](./.github/images/example.png)
 
-Since there are tasks where the badge is not the final score (for example, manual corrections) there are the following additional arguments:
+Since there are tasks where the badge is not the final score (for example, manual corrections) there are the following additional arguments. If those are used it is advised to check only the repositories for this specific task.
 
 **-m** Points
 
