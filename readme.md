@@ -5,6 +5,9 @@ A tool to quickly check if all the submissions assigned to oneself for the "Prog
 ## Setup and Requirements
 
 - Python
+  - package *requests*
+    Can be installed by `python -m pip install -r requirements.txt`
+
 - Github API Token with the following permissions
   - repo
   - read:org
@@ -26,13 +29,18 @@ This script parses an file with given repositories and checks their status. The 
 python check.py FILE
 ```
 
-The file must have the original format after the assignment, only lines starting with `*` are checked.
+The file must have the original format after the assignment, only lines starting with `*` are checked:
+
+![Example file](./.github/images/file.png)
 
 The tool checks if the given points match the ones from the badge, if not, a warning is issued.
+
+![Example output](./.github/images/example.png)
 
 Since there are tasks where the badge is not the final score (for example, manual corrections) there are the following additional arguments:
 
 **-m** Points
+
 For tasks that have a manual correction part, the maximum points for the manual task part can be handed over by this.
 Example: a task has 8 points, 5 for it for the code (means the badge on GitHub shows x/5 points) and 3 for whatever answers, then the correct call would be:
 
@@ -41,6 +49,7 @@ python check.py FILE -m 3
 ```
 
 **-b** Points
+
 Overwrites the points of the badge, so of course no comparison of the points of the badge with the given points is possible, it is assumed at each submission, the maximum score was reached. Useful for the ship task as an example.
 
 ## License
