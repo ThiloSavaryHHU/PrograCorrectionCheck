@@ -42,7 +42,8 @@ Since there are tasks where the badge is not the final score (for example, manua
 **-m** Points
 
 For tasks that have a manual correction part, the maximum points for the manual task part can be handed over by this.
-Example: a task has 8 points, 5 for it for the code (means the badge on GitHub shows x/5 points) and 3 for whatever answers, then the correct call would be:
+
+Example: a task has 8 points, 5 for the code (means the badge on GitHub shows x/5 points) and 3 for whatever answers, then the correct call would be:
 
 ```bash
 python check.py FILE -m 3
@@ -51,6 +52,10 @@ python check.py FILE -m 3
 **-b** Points
 
 Overwrites the points of the badge, so of course no comparison of the points of the badge with the given points is possible, it is assumed at each submission, the maximum score was reached. Useful for the ship task as an example.
+
+```bash
+python check.py FILE -b 5
+```
 
 ## License
 
