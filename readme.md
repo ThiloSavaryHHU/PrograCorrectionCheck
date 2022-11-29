@@ -34,10 +34,11 @@ The file must have the original format after the assignment, only lines starting
 
 ![Example file](./.github/images/file.png)
 
+### Validation
+
 The tool checks if the given points match the ones from the badge, if not, a warning is issued.
 
 ![Example output](./.github/images/example.png)
-
 Since there are tasks where the badge is not the final score (for example, manual corrections) there are the following additional arguments. If those are used it is advised to check only the repositories for this specific task.
 
 **-m** Points
@@ -56,6 +57,14 @@ Overwrites the points of the badge, so of course no comparison of the points of 
 
 ```bash
 python check.py FILE -b 5
+```
+
+### Verbosity
+
+Per default only problems are displayed, for more verbosity use the -v flag:
+
+```bash
+python check.py File -v
 ```
 
 ## License

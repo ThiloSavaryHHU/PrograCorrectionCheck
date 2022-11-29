@@ -1,3 +1,4 @@
+import logging
 import argparse
 import base64
 import os
@@ -27,6 +28,12 @@ headers = {
     'Accept': 'application/vnd.github+json'
 }
 
+logger = logging.getLogger("__name__")
+
+logging_handler = logging.StreamHandler()
+logging_handler.setFormatter(logging.Formatter('%(levelname)s - %(message)s'))
+
+logger.addHandler(logging_handler)
 
 def get_issue(repo_url):
     match = re.search(r'^https://github.com/(.+)/(.+)', repo_url)
@@ -83,15 +90,16 @@ def check_file(filename, **kwargs):
                     match = re.search(r'(https://github.com/\S*).*$', line)
                     if match:
                         check_repo(match.groups()[0], **kwargs)
+        print('Finished!')
     except FileNotFoundError as e:
-        print('ERROR: File does not exist', file=sys.stderr)
+        logger.error('File does not exist')
         print(e, file=sys.stderr)
     except PermissionError as e:
-        print('ERROR: Could not open file', file=sys.stderr)
+        logger.error('ERROR: Could not open file')
         print(e, file=sys.stderr)
 
 
-def check_repo(repo_url, manual, badge_override):
+def check_repo(repo_url, manual, badge_override, *args, **kwargs):
     try:
         issue = get_issue(repo_url)
         if issue:
@@ -101,22 +109,22 @@ def check_repo(repo_url, manual, badge_override):
                 if badge:
                     badge_given, badge_max = parse_badge(badge)
                 else:
-                    print(f'CRITICAL: Repo {repo_url} has NO badge')
+                    logger.critical(f'Repo {repo_url} has NO badge')
                     return
             else:
                 badge_given, badge_max = badge_override, badge_override
             if int(issue_max) != (int(badge_max) + manual):
-                print(f'CRITICAL: Repo {repo_url} has '
-                      f'different max points, issue is {issue_max}, badge is {badge_max} + {manual} (manual)')
+                logger.critical(f'Repo {repo_url} has '
+                                f'different max points, issue is {issue_max}, badge is {badge_max} + {manual} (manual)')
             if int(issue_given) != int(badge_given) + manual:
-                print(f'WARNING: Repo {repo_url} has '
-                      f'different given points, issue is {issue_given}, badge is {badge_given} + {manual} (manual)')
-            print(f'NOTICE: Finished checking {repo_url}')
+                logger.warning(f'Repo {repo_url} has '
+                               f'different given points, issue is {issue_given}, badge is {badge_given} + {manual} (manual)')
+            logger.info(f'Finished checking {repo_url}')
         else:
-            print(f'CRITICAL: Repo {repo_url} has NO issue')
+            logger.critical(f'Repo {repo_url} has NO issue')
     except ValueError as e:
-        print(f'ERROR: Could not parse {repo_url}', file=sys.stderr)
-        print(e, file=sys.stderr)
+        logger.error(f'Could not parse {repo_url}')
+        logger.error(e)
 
 
 def check_login():
@@ -132,11 +140,15 @@ if __name__ == "__main__":
                         help='If parts of the correction are manual enter the points for it here')
     parser.add_argument('-b', '--badge-override', type=int, dest='badge_override',
                         help='Override badge', default=None)
+    parser.add_argument("-v", "--verbose", help="Increase output verbosity",
+                        action="store_true")
     args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     try:
         check_login()
     except ConnectionError as e:
-        print("ERROR: Could not connect to github with given credentials", file=sys.stderr)
+        logger.error("Could not connect to github with given credentials")
         sys.exit(1)
 
     check_file(**vars(args))
