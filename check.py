@@ -3,11 +3,18 @@ import base64
 import os
 import re
 import sys
-import settings
+import types
+
+try:
+    import settings
+except ImportError:
+    settings = types.SimpleNamespace()
+    settings.USERNAME = ''
+    settings.TOKEN = ''
 import requests
 
-USERNAME = os.environ.get('GITHUB_USERNAME', settings.USERNAME)
-TOKEN = os.environ.get('GITHUB_TOKEN', settings.TOKEN)
+USERNAME = os.environ.get('GITHUB_USERNAME', getattr(settings, 'USERNAME'))
+TOKEN = os.environ.get('GITHUB_TOKEN', getattr(settings, 'TOKEN'))
 
 # For token generation, login into GitHub > Settings > Developer settings > Personal access tokens
 # > Tokens (classic) > Generate new token > (classic)
